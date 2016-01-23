@@ -10,6 +10,7 @@ import string
 import random
 import wave
 import time
+import crud
 from flask import Flask, Response, render_template, request, redirect, url_for, send_from_directory, g, session
 from multiprocessing.pool import ThreadPool
 
@@ -19,52 +20,29 @@ houndClient = houndify.StreamingHoundClient("F98d-lDRNRHV91T7LFIiKqHAZauzZbsvyto
 houndClient.setLocation(37.388309, -121.973968)
 BUFFER_SIZE = 512
 
-def wav(filePath, name):
-	newName = name + '.wav'
-	os.system("ffmpeg -i " + filePath + " " + newName)
-	return newName
 
-class MyListener(houndify.HoundListener):
+
+class reviewListener(houndify.HoundListener):
 	globalResponse = {}
 	def onPartialTranscript(self, transcript):
 		print "Partial transcript: " + transcript
 	def onFinalResponse(self, response):
 		print "Final response: " + str(response)
-
+		#Put the handling here for reviewing?
 	def onTranslatedResponse(self, response):
 		print "Translated response: " + response
 	def onError(self, err):
 		print "ERROR"
 
-def post(params):
-	connection = httplib.HTTPSConnection('api.parse.com', 443)
-	connection.connect()
-	connection.request('POST', '/1/classes/Feedbacks', params, {
-	       "X-Parse-Application-Id": "cBl3nISVOAT6ryXczsTeQFAiEr0os9oYWXUJHpKb",
-	       "X-Parse-REST-API-Key": "GokaVtTay8vWCQeydQZzC4neVhIDhz5OnsyuWd9G"
-	})
-	return connection.getresponse().read()
-
-def put(params):
-	connection = httplib.HTTPSConnection('api.parse.com', 443)
-	connection.connect()
-	connection.request('PUT', '/1/classes/Feedbacks/'+params, json.dumps({
-		"tags": tags
-     }), {
-	       "X-Parse-Application-Id": "cBl3nISVOAT6ryXczsTeQFAiEr0os9oYWXUJHpKb",
-	       "X-Parse-REST-API-Key": "GokaVtTay8vWCQeydQZzC4neVhIDhz5OnsyuWd9G"
-	     })
-	return connection.getresponse().read()
 
 
-def get(paramstring):
-	connection = httplib.HTTPSConnection('api.parse.com', 443)
-	connection.connect()
-	connection.request('GET', '/1/classes/Feedbacks', str(paramstring), {
-	       "X-Parse-Application-Id": "cBl3nISVOAT6ryXczsTeQFAiEr0os9oYWXUJHpKb",
-	       "X-Parse-REST-API-Key": "GokaVtTay8vWCQeydQZzC4neVhIDhz5OnsyuWd9G"
-	     })
-	return connection.getresponse().read()
+
+# WAV Encoding function
+def wav(filePath, name):
+	newName = name + '.wav'
+	os.system("ffmpeg -i " + filePath + " " + newName)
+	return newName
+
 
 
 webapp = Flask(__name__)
@@ -109,7 +87,7 @@ def speech2text():
 	audio = wave.open(newPath2)
 	samples = audio.readframes(BUFFER_SIZE)
 	finished = False
-	houndClient.start(MyListener())
+	houndClient.start(reviewListener())
 	while not finished:
 		finished = houndClient.fill(samples)
 		time.sleep(0.032)			## simulate real-time so we can see the partial transcripts
@@ -125,7 +103,7 @@ def houndifyTest():
 	audio = wave.open("test.wav")
 	samples = audio.readframes(BUFFER_SIZE)
 	finished = False
-	houndClient.start(MyListener())
+	houndClient.start(reviewListener())
 	while not finished:
 		finished = houndClient.fill(samples)
 		time.sleep(0.032)			## simulate real-time so we can see the partial transcripts
