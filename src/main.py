@@ -19,29 +19,37 @@ houndClient = houndify.StreamingHoundClient("F98d-lDRNRHV91T7LFIiKqHAZauzZbsvyto
 houndClient.setLocation(37.388309, -121.973968)
 BUFFER_SIZE = 512
 
-
-def mp3(filePath, name):
-	newName = name + ".mp3"
-	at = audiotranscode.AudioTranscode()
-	at.transcode(filePath, newName)
-	return newName
-
 def wav(filePath, name):
 	newName = name + '.wav'
 	os.system("ffmpeg -i " + filePath + " " + newName)
 	return newName
 
 class MyListener(houndify.HoundListener):
+	globalResponse = {}
 	def onPartialTranscript(self, transcript):
 		print "Partial transcript: " + transcript
 	def onFinalResponse(self, response):
 		print "Final response: " + str(response)
+
 	def onTranslatedResponse(self, response):
 		print "Translated response: " + response
 	def onError(self, err):
 		print "ERROR"
 
+def post(params):
+	connection = httplib.HTTPSConnection('api.parse.com', 443)
+	connection.connect()
+	connection.request('POST', '/1/classes/Feedbacks', params, {
+	       "X-Parse-Application-Id": "cBl3nISVOAT6ryXczsTeQFAiEr0os9oYWXUJHpKb",
+	       "X-Parse-REST-API-Key": "GokaVtTay8vWCQeydQZzC4neVhIDhz5OnsyuWd9G"
+	})
+	return connection.getresponse().read()
 
+def put(params):
+	return 0
+
+def get(params):
+	return 0
 
 webapp = Flask(__name__)
 @webapp.route("/")
@@ -57,14 +65,7 @@ def root():
 @webapp.route("/api/create")
 def create(newObj):
 	data = request.method
-	connection = httplib.HTTPSConnection('api.parse.com', 443)
-	connection.connect()
-	connection.request('POST', '/1/classes/Feedbacks', json.dumps(data), {
-	       "X-Parse-Application-Id": "cBl3nISVOAT6ryXczsTeQFAiEr0os9oYWXUJHpKb",
-	       "X-Parse-REST-API-Key": "GokaVtTay8vWCQeydQZzC4neVhIDhz5OnsyuWd9G"
-	     })
-	return connection.getresponse().read()
-
+	return post()
 @webapp.route("/api/read")
 def read():
 	connection = httplib.HTTPSConnection('api.parse.com', 443)
@@ -75,14 +76,12 @@ def read():
 	     })
 	return connection.getresponse().read()
 
-@webapp.route("/api/update")
-def update():
+@webapp.route("/api/update/<id>")
+def update(id):
 	connection = httplib.HTTPSConnection('api.parse.com', 443)
 	connection.connect()
-	connection.request('PUT', '/1/classes/Feedbacks', json.dumps({
-       "score": 1337,
-       "playerName": "Sean Plott",
-       "cheatMode": False
+	connection.request('PUT', '/1/classes/Feedbacks/'+id, json.dumps({
+		"tags": tags
      }), {
 	       "X-Parse-Application-Id": "cBl3nISVOAT6ryXczsTeQFAiEr0os9oYWXUJHpKb",
 	       "X-Parse-REST-API-Key": "GokaVtTay8vWCQeydQZzC4neVhIDhz5OnsyuWd9G"
@@ -93,7 +92,7 @@ def update():
 def speech2text():
 	connection = httplib.HTTPSConnection('api.parse.com', 443)
 	connection.connect()
-	connection.request('GET', '/1/classes/Feedbacks/Vhb84o3k9P', '', {
+	connection.request('GET', '/1/classes/Feedbacks/vYGZor1rHD', '', {
 	       "X-Parse-Application-Id": "cBl3nISVOAT6ryXczsTeQFAiEr0os9oYWXUJHpKb",
 	       "X-Parse-REST-API-Key": "GokaVtTay8vWCQeydQZzC4neVhIDhz5OnsyuWd9G"
 	     })
@@ -117,7 +116,7 @@ def speech2text():
 			break
 	houndClient.finish()
 	os.remove(newPath2)
-	return("success")
+	return(result)
 
 @webapp.route("/api/houndifyTest")
 def houndifyTest():
@@ -132,7 +131,7 @@ def houndifyTest():
 		if len(samples) == 0:
 			break
 	houndClient.finish()
-	return("success")
+	return(result)
 
 
 #server initializiation
