@@ -23,11 +23,20 @@ def root():
 
 # API Routes
 # General format is "/api/<endpoint here>"
-@webapp.route("/api/structure")
-def query():
+@webapp.route("/api/create")
+def create():
 	return 0
-@webapp.route("/api/review")
-def review():
+
+@webapp.route("/api/read")
+def read():
+	return 0
+
+@webapp.route("/api/update")
+def update():
+	return 0
+
+@webapp.route("/api/delete")
+def update():
 	return 0
 
 
