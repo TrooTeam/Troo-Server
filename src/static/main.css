@@ -1,0 +1,282 @@
+
+
+
+/* ==========================================================================
+   Author's custom styles
+   ========================================================================== */
+
+
+
+body{
+text-align: center;
+margin: 0;
+padding: 0;
+background: black;
+font-family:"Yanone Kaffeesatz";
+color: white;
+}
+h4{
+  font-size: 30px;
+  color: black;
+}
+#wrapper{
+  min-height:768;
+  min-width:1366;
+}
+
+#map-layer{
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 20;
+}
+
+#map{
+  width: 100%;
+  height: 100%;
+}
+
+.dashboard-window{
+  opacity: 0.85;
+  min-width:200px;
+  min-height:100px;
+  background-color: #534292;
+  z-index: 22;
+  border-width: 1px;
+  border-radius:10px;
+  text-align: left;
+}
+.dashboard-header{
+  padding: 5px 10px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  background-color: white;
+  color:black;
+  height:2em;
+}
+.dashboard-body{
+  padding: 5px 10px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+#sideBar{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  height:100px;
+  background-color: #534292;
+  opacity: 0.85;
+  z-index:21;
+  text-align: left;
+  padding: 0px 50px;
+  display:flex;
+  align-items: center;
+}
+#position-dashboard{
+  position: fixed;
+  max-height:400px;
+  width:200px;
+  top: 10px;
+  right: 10px;
+}
+
+#time-dashboard{
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translate(-50%);
+  width: 260px;
+  min-height: 52px;
+  font-size:18px;
+  text-align:left;
+  padding:4px;
+}
+
+#time-body{
+  padding: 0 10px;
+}
+
+.date-time-picker{
+  text-align:center;
+  display:inline-block;
+}
+
+#date-picker{
+  padding:5px 1px;
+  margin:5px;
+  width: 140px;
+}
+
+#time-picker{
+  padding:5px 1px;
+  margin:5px;
+  width: 100px;
+}
+
+.time-picker-row td{
+  padding:4px 8px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: white;
+}
+
+#time-center{
+  border-left-style: dashed !important;
+  border-right-style: dashed !important;
+}
+
+td{
+  padding:4px;
+  border-width: 2px;
+  border-style: solid;
+  border-color: white;
+}
+
+
+.upper-left{
+  border-top-left-radius: 5px;
+}
+
+.upper-right{
+  border-top-right-radius: 5px;
+}
+
+.bottom-left{
+  border-bottom-left-radius: 5px;
+}
+
+
+.bottom-right{
+  border-bottom-right-radius: 5px;
+}
+
+.time-arrow{
+  /*No select*/
+  -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.u-flip{
+  -webkit-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  transform: rotate(180deg);
+  padding:0px 0px 0px 2px;
+}
+
+.time-arrow:hover{
+  cursor:pointer;
+}
+
+#search{
+font-size: 3.0em;
+background: black;
+color: white;
+border-width: 0px 0px 2px 0px;
+outline:none;
+padding:0 25 0 0;
+font-family:"Yanone Kaffeesatz";
+}
+
+.collectionLabel{
+  color: black !important;
+}
+
+select{
+  color:black !important;
+}
+
+input[type="submit"] {
+font-size: 3.0em;
+color: white;
+border:none;
+z-index: 2;
+cursor: pointer;
+opacity: 0.4;
+cursor: pointer;
+background: black;
+padding: 0px;
+margin-left: -25px;
+focus: none;
+}
+
+input[type="submit"]:hover{
+opacity:0.8;
+}
+
+input[type="submit"]:focus{
+outline:none;
+color:black;
+}
+
+.collection-name{
+  width: 95px;
+  height: 1em;
+  border-bottom: 2px solid white;
+  float: right;
+  margin-right: 5px;
+  overflow: hidden;
+}
+  .collection-name br{
+    display:none;
+  }
+.delete-button{
+  float: right;
+  background-color: white;
+  color: black;
+  padding: 2px;
+  border-style: solid;
+  border-radius: 2px;
+}
+.bar rect {
+  fill: steelblue;
+  shape-rendering: crispEdges;
+}
+
+.bar text {
+  fill: #fff;
+}
+
+.axis path, .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+.legend{
+  font-size:12 px;
+}
+rect {
+  stroke-width: 2;
+}
+.tooltip {
+  background: #eee;
+  box-shadow: 0 0 5px #999999;
+  color: black;
+  display: none;
+  font-size: 12px;
+  left: 130px;
+  padding: 10px;
+  text-align: center;
+  top: 95px;
+  width: 80px;
+  z-index: 10;
+}
+#donutChart{
+  position: relative;
+}
+.xdomain{
+  color:black;
+}
+span{
+  font-size: 15px;
+}
+.arcText{
+  color: white;
+}
