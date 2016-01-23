@@ -8,18 +8,23 @@ import audiotranscode
 import houndify
 import string
 import random
+import wave
+import time
 from flask import Flask, Response, render_template, request, redirect, url_for, send_from_directory, g, session
 from multiprocessing.pool import ThreadPool
 
 houndClient = houndify.StreamingHoundClient("F98d-lDRNRHV91T7LFIiKqHAZauzZbsvytojjNyFqr8sdZTl_9UmMjW4joxKqTJO7w688WUi7Cl1tRCjst3WRw==",
 											"2z8RgKlFDs2paNd-opTnmQ==")
+# spoof location
+houndClient.setLocation(37.388309, -121.973968)
+BUFFER_SIZE = 512
 
 
 def wav(filePath, name):
 	newName = name + ".wav"
 	at = audiotranscode.AudioTranscode()
 	at.transcode(filePath, newName)
-	return 0
+	return newName
 
 class MyListener(houndify.HoundListener):
 	def onPartialTranscript(self, transcript):
@@ -93,8 +98,20 @@ def speech2text():
 	unique = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(8))
 	uuid = unique + ".m4a"
 	urllib.urlretrieve (url, uuid)
-	wav(uuid, unique)
-
+	newPath = wav(uuid, unique)
+	os.remove(uuid)
+	audio = wave.open(newPath)
+	samples = audio.readframes(BUFFER_SIZE)
+	finished = False
+	houndClient.start(MyListener())
+	while not finished:
+		finished = houndClient.fill(samples)
+		time.sleep(0.032)			## simulate real-time so we can see the partial transcripts
+		samples = audio.readframes(BUFFER_SIZE)
+		if len(samples) == 0:
+			break
+	houndClient.finish()
+	# os.remove(newPath)
 	return("success")
 
 
