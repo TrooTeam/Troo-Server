@@ -162,7 +162,7 @@ class AudioTranscode:
     ]
     Decoders = [
         Decoder('mp3', ['mpg123', '-w', '-', 'INPUT']),
-        Decoder('mp3', ['ffmpeg', '-i', 'INPUT', '-f', 'wav',
+        Decoder('mp3', ['ffmpeg', '-i', 'INPUT', '-f',
                         '-acodec', 'pcm_s16le', '-']),
         Decoder('m4a', ['faad', '-w', 'INPUT']),
         Decoder('wav', ['cat', 'INPUT'])

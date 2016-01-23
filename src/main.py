@@ -27,9 +27,8 @@ def mp3(filePath, name):
 	return newName
 
 def wav(filePath, name):
-	newName = name + ".wav"
-	at = audiotranscode.AudioTranscode()
-	at.transcode(filePath, newName)
+	newName = name + '.wav'
+	os.system("ffmpeg -i " + filePath + " " + newName)
 	return newName
 
 class MyListener(houndify.HoundListener):
@@ -104,21 +103,35 @@ def speech2text():
 	unique = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(8))
 	uuid = unique + ".m4a"
 	urllib.urlretrieve (url, uuid)
-	newPath = mp3(uuid,unique)
-	newPath2 = wav(newPath, unique)
-	# os.remove(uuid)
-	# audio = wave.open(newPath)
-	# samples = audio.readframes(BUFFER_SIZE)
-	# finished = False
-	# houndClient.start(MyListener())
-	# while not finished:
-	# 	finished = houndClient.fill(samples)
-	# 	time.sleep(0.032)			## simulate real-time so we can see the partial transcripts
-	# 	samples = audio.readframes(BUFFER_SIZE)
-	# 	if len(samples) == 0:
-	# 		break
-	# houndClient.finish()
-	# os.remove(newPath)
+	newPath2 = wav(uuid, unique)
+	os.remove(uuid)
+	audio = wave.open(newPath2)
+	samples = audio.readframes(BUFFER_SIZE)
+	finished = False
+	houndClient.start(MyListener())
+	while not finished:
+		finished = houndClient.fill(samples)
+		time.sleep(0.032)			## simulate real-time so we can see the partial transcripts
+		samples = audio.readframes(BUFFER_SIZE)
+		if len(samples) == 0:
+			break
+	houndClient.finish()
+	os.remove(newPath2)
+	return("success")
+
+@webapp.route("/api/houndifyTest")
+def houndifyTest():
+	audio = wave.open("test.wav")
+	samples = audio.readframes(BUFFER_SIZE)
+	finished = False
+	houndClient.start(MyListener())
+	while not finished:
+		finished = houndClient.fill(samples)
+		time.sleep(0.032)			## simulate real-time so we can see the partial transcripts
+		samples = audio.readframes(BUFFER_SIZE)
+		if len(samples) == 0:
+			break
+	houndClient.finish()
 	return("success")
 
 
