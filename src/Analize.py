@@ -1,4 +1,5 @@
 from alchemyapi import AlchemyAPI
+from crud import post
 
 alchemyapi = AlchemyAPI()
 
@@ -12,11 +13,10 @@ def get_entities(review):
 
     result = []
     for entity in entities["keywords"]:
-        print entity
         if "score" not in entity["sentiment"]:
             continue
         weighted_score = float(entity["relevance"]) * float(entity["sentiment"]["score"])
-        result.append((entity["text"], float(entity["sentiment"]["score"]), weighted_score))
+        result.append({"text": entity["text"], "score": float(entity["sentiment"]["score"]), "weighted_score": weighted_score})
     result = sorted(result, key=lambda data: abs(data[2]), reverse=True)
     return result
 
@@ -30,7 +30,7 @@ def get_sentiment(review):
 def handle_review(text, restaurant):
     entities = get_entities(text)
     sentiment = get_sentiment(text)
-    #record(entities, sentiment,entities)
+    post({"audioName": restaurant, "avgSentiment": sentiment, "reviewTags": entities, "reviewText": text})
 
 
 
