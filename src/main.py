@@ -4,7 +4,7 @@ import logging
 import json
 from flask import Flask, Response, render_template, request, redirect, url_for, send_from_directory, g, session
 from multiprocessing.pool import ThreadPool
-from controller.query import *
+
 
 webapp = Flask(__name__)
 @webapp.route("/")
