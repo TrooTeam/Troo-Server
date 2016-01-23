@@ -156,12 +156,16 @@ class AudioTranscode:
     or transcode_stream to get a generator of the encoded stream"""
     READ_BUFFER = 1024
     Encoders = [
+        Encoder('mp3', ['lame', '-b', 'BITRATE', '-', '-']),
         Encoder('m4a', ['faac', '-b', 'BITRATE', '-P', '-X', '-o', '-', '-']),
-        Encoder('wav', ['cat']),
+        Encoder('wav', ['cat'])
     ]
     Decoders = [
+        Decoder('mp3', ['mpg123', '-w', '-', 'INPUT']),
+        Decoder('mp3', ['ffmpeg', '-i', 'INPUT', '-f', 'wav',
+                        '-acodec', 'pcm_s16le', '-']),
         Decoder('m4a', ['faad', '-w', 'INPUT']),
-        Decoder('wav', ['cat', 'INPUT']),
+        Decoder('wav', ['cat', 'INPUT'])
     ]
 
     def __init__(self, debug=False):

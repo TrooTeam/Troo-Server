@@ -20,6 +20,12 @@ houndClient.setLocation(37.388309, -121.973968)
 BUFFER_SIZE = 512
 
 
+def mp3(filePath, name):
+	newName = name + ".mp3"
+	at = audiotranscode.AudioTranscode()
+	at.transcode(filePath, newName)
+	return newName
+
 def wav(filePath, name):
 	newName = name + ".wav"
 	at = audiotranscode.AudioTranscode()
@@ -98,19 +104,20 @@ def speech2text():
 	unique = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(8))
 	uuid = unique + ".m4a"
 	urllib.urlretrieve (url, uuid)
-	newPath = wav(uuid, unique)
-	os.remove(uuid)
-	audio = wave.open(newPath)
-	samples = audio.readframes(BUFFER_SIZE)
-	finished = False
-	houndClient.start(MyListener())
-	while not finished:
-		finished = houndClient.fill(samples)
-		time.sleep(0.032)			## simulate real-time so we can see the partial transcripts
-		samples = audio.readframes(BUFFER_SIZE)
-		if len(samples) == 0:
-			break
-	houndClient.finish()
+	newPath = mp3(uuid,unique)
+	newPath2 = wav(newPath, unique)
+	# os.remove(uuid)
+	# audio = wave.open(newPath)
+	# samples = audio.readframes(BUFFER_SIZE)
+	# finished = False
+	# houndClient.start(MyListener())
+	# while not finished:
+	# 	finished = houndClient.fill(samples)
+	# 	time.sleep(0.032)			## simulate real-time so we can see the partial transcripts
+	# 	samples = audio.readframes(BUFFER_SIZE)
+	# 	if len(samples) == 0:
+	# 		break
+	# houndClient.finish()
 	# os.remove(newPath)
 	return("success")
 
