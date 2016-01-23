@@ -46,10 +46,26 @@ def post(params):
 	return connection.getresponse().read()
 
 def put(params):
-	return 0
+	connection = httplib.HTTPSConnection('api.parse.com', 443)
+	connection.connect()
+	connection.request('PUT', '/1/classes/Feedbacks/'+params, json.dumps({
+		"tags": tags
+     }), {
+	       "X-Parse-Application-Id": "cBl3nISVOAT6ryXczsTeQFAiEr0os9oYWXUJHpKb",
+	       "X-Parse-REST-API-Key": "GokaVtTay8vWCQeydQZzC4neVhIDhz5OnsyuWd9G"
+	     })
+	return connection.getresponse().read()
 
-def get(params):
-	return 0
+
+def get(paramstring):
+	connection = httplib.HTTPSConnection('api.parse.com', 443)
+	connection.connect()
+	connection.request('GET', '/1/classes/Feedbacks', str(paramstring), {
+	       "X-Parse-Application-Id": "cBl3nISVOAT6ryXczsTeQFAiEr0os9oYWXUJHpKb",
+	       "X-Parse-REST-API-Key": "GokaVtTay8vWCQeydQZzC4neVhIDhz5OnsyuWd9G"
+	     })
+	return connection.getresponse().read()
+
 
 webapp = Flask(__name__)
 @webapp.route("/")
@@ -65,28 +81,14 @@ def root():
 @webapp.route("/api/create")
 def create(newObj):
 	data = request.method
-	return post()
+	return post(data)
 @webapp.route("/api/read")
 def read():
-	connection = httplib.HTTPSConnection('api.parse.com', 443)
-	connection.connect()
-	connection.request('GET', '/1/classes/Feedbacks', '', {
-	       "X-Parse-Application-Id": "cBl3nISVOAT6ryXczsTeQFAiEr0os9oYWXUJHpKb",
-	       "X-Parse-REST-API-Key": "GokaVtTay8vWCQeydQZzC4neVhIDhz5OnsyuWd9G"
-	     })
-	return connection.getresponse().read()
+	return get()
 
 @webapp.route("/api/update/<id>")
 def update(id):
-	connection = httplib.HTTPSConnection('api.parse.com', 443)
-	connection.connect()
-	connection.request('PUT', '/1/classes/Feedbacks/'+id, json.dumps({
-		"tags": tags
-     }), {
-	       "X-Parse-Application-Id": "cBl3nISVOAT6ryXczsTeQFAiEr0os9oYWXUJHpKb",
-	       "X-Parse-REST-API-Key": "GokaVtTay8vWCQeydQZzC4neVhIDhz5OnsyuWd9G"
-	     })
-	return connection.getresponse().read()
+	return put(id);
 
 @webapp.route("/api/speech2text")
 def speech2text():
