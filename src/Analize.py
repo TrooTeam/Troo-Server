@@ -20,3 +20,18 @@ def get_entities(review):
     result = sorted(result, key=lambda data: abs(data[2]), reverse=True)
     return result
 
+
+def get_sentiment(review):
+    sentiment = alchemyapi.sentiment("text", review)
+    print(sentiment)
+    return float(sentiment["docSentiment"]["score"])
+
+
+def handle_review(text, restaurant):
+    entities = get_entities(text)
+    sentiment = get_sentiment(text)
+    #record(entities, sentiment,entities)
+
+
+
+
