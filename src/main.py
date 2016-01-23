@@ -2,9 +2,18 @@ import os
 import sys
 import logging
 import json
-import requests
+import http.client
 from flask import Flask, Response, render_template, request, redirect, url_for, send_from_directory, g, session
 from multiprocessing.pool import ThreadPool
+#
+# connection = http.client.HTTPSConnection('api.parse.com', 443)
+# connection.connect()
+# connection.request('GET', '/1/classes/Feedbacks', '', {
+#        "X-Parse-Application-Id": "cBl3nISVOAT6ryXczsTeQFAiEr0os9oYWXUJHpKb",
+#        "X-Parse-REST-API-Key": "GokaVtTay8vWCQeydQZzC4neVhIDhz5OnsyuWd9G"
+#      })
+# result = json.loads(connection.getresponse().read().decode("utf-8"))
+# print(result)
 
 
 webapp = Flask(__name__)
