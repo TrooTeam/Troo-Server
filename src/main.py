@@ -18,7 +18,11 @@ def root():
 # General format is "/api/<endpoint here>"
 @webapp.route("/api/create")
 def create():
-	connection.request('PUT', '/1/classes/Feedbacks', '', {
+	connection.request('POST', '/1/classes/Feedbacks', json.dumps({
+       "score": 1337,
+       "playerName": "Sean Plott",
+       "cheatMode": False
+     }), {
 	       "X-Parse-Application-Id": "cBl3nISVOAT6ryXczsTeQFAiEr0os9oYWXUJHpKb",
 	       "X-Parse-REST-API-Key": "GokaVtTay8vWCQeydQZzC4neVhIDhz5OnsyuWd9G"
 	     })
@@ -36,21 +40,17 @@ def read():
 
 @webapp.route("/api/update")
 def update():
-	connection.request('POST', '/1/classes/Feedbacks', '', {
+	connection.request('PUT', '/1/classes/Feedbacks', json.dumps({
+       "score": 1337,
+       "playerName": "Sean Plott",
+       "cheatMode": False
+     }), {
 	       "X-Parse-Application-Id": "cBl3nISVOAT6ryXczsTeQFAiEr0os9oYWXUJHpKb",
 	       "X-Parse-REST-API-Key": "GokaVtTay8vWCQeydQZzC4neVhIDhz5OnsyuWd9G"
 	     })
 	result = json.loads(connection.getresponse().read().decode("utf-8"))
 	return 0
 
-@webapp.route("/api/delete")
-def delete():
-	connection.request('POST', '/1/classes/Feedbacks', '', {
-	       "X-Parse-Application-Id": "cBl3nISVOAT6ryXczsTeQFAiEr0os9oYWXUJHpKb",
-	       "X-Parse-REST-API-Key": "GokaVtTay8vWCQeydQZzC4neVhIDhz5OnsyuWd9G"
-	     })
-	result = json.loads(connection.getresponse().read().decode("utf-8"))
-	return 0
 
 
 #server initializiation
