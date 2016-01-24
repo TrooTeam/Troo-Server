@@ -1,5 +1,5 @@
 from alchemyapi import AlchemyAPI
-from crud import post
+from crud import put
 
 alchemyapi = AlchemyAPI()
 
@@ -26,7 +26,7 @@ def get_sentiment(review):
     return float(sentiment["docSentiment"]["score"])
 
 
-def handle_review(text, restaurant):
+def handle_review(selector, text, restaurant):
     entities = get_entities(text)
     sentiment = get_sentiment(text)
-    post({"audioName": restaurant, "avgSentiment": sentiment, "reviewTags": entities, "reviewText": text})
+    put(selector, {"audioName": restaurant, "avgSentiment": sentiment, "reviewTags": entities, "reviewText": text})
