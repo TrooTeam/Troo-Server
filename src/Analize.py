@@ -9,7 +9,6 @@ def get_key_sentences(review):
 
 def get_entities(review):
     entities = alchemyapi.keywords("text", review, {"sentiment": 1})
-
     result = []
     for entity in entities["keywords"]:
         print entity
@@ -19,4 +18,3 @@ def get_entities(review):
         result.append((entity["text"], float(entity["sentiment"]["score"]), weighted_score))
     result = sorted(result, key=lambda data: abs(data[2]), reverse=True)
     return result
-

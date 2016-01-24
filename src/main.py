@@ -11,6 +11,7 @@ import random
 import wave
 import time
 import crud
+import Analize
 from flask import Flask, Response, render_template, request, redirect, url_for, send_from_directory, g, session
 from multiprocessing.pool import ThreadPool
 
@@ -23,11 +24,12 @@ BUFFER_SIZE = 512
 
 
 class reviewListener(houndify.HoundListener):
-	globalResponse = {}
+
 	def onPartialTranscript(self, transcript):
 		print "Partial transcript: " + transcript
 	def onFinalResponse(self, response):
 		print "Final response: " + str(response)
+
 		#Put the handling here for reviewing?
 	def onTranslatedResponse(self, response):
 		print "Translated response: " + response
@@ -39,9 +41,7 @@ class reviewListener(houndify.HoundListener):
 
 # WAV Encoding function
 def wav(filePath, name):
-	newName = name + '.wav'
-	os.system("ffmpeg -i " + filePath + " " + newName)
-	return newName
+	os.system("track2track -t wav *m4a")
 
 
 
@@ -65,26 +65,25 @@ def read():
 	return get()
 
 @webapp.route("/api/update/<id>")
-def update(id):
-	return put(id);
+def update(id, params):
+	return put(id, params);
 
 @webapp.route("/api/speech2text")
 def speech2text():
 	connection = httplib.HTTPSConnection('api.parse.com', 443)
 	connection.connect()
 	connection.request('GET', '/1/classes/Feedbacks/vYGZor1rHD', '', {
+	connection.request('GET', '/1/classes/Feedbacks/P784yfn1qi', '', {
 	       "X-Parse-Application-Id": "cBl3nISVOAT6ryXczsTeQFAiEr0os9oYWXUJHpKb",
 	       "X-Parse-REST-API-Key": "GokaVtTay8vWCQeydQZzC4neVhIDhz5OnsyuWd9G"
 	     })
-	# testObj = connection.getresponse().read()
-	result = json.loads(connection.getresponse().read().decode("utf-8"))
-	url = result["audioFile"]["url"]
-	unique = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(8))
 	uuid = unique + ".m4a"
 	urllib.urlretrieve (url, uuid)
 	newPath2 = wav(uuid, unique)
 	os.remove(uuid)
 	audio = wave.open(newPath2)
+	# os.remove(uuid)
+	audio = wave.open("track00.wav")
 	samples = audio.readframes(BUFFER_SIZE)
 	finished = False
 	houndClient.start(reviewListener())
@@ -97,6 +96,8 @@ def speech2text():
 	houndClient.finish()
 	os.remove(newPath2)
 	return(result)
+	os.remove("track00.wav")
+	return("Houndify Finished.")
 
 @webapp.route("/api/houndifyTest")
 def houndifyTest():
@@ -106,7 +107,6 @@ def houndifyTest():
 	houndClient.start(reviewListener())
 	while not finished:
 		finished = houndClient.fill(samples)
-		time.sleep(0.032)			## simulate real-time so we can see the partial transcripts
 		samples = audio.readframes(BUFFER_SIZE)
 		if len(samples) == 0:
 			break
