@@ -68,8 +68,8 @@ def read():
 def update(id, params):
 	return put(id, params);
 
-@webapp.route("/api/speech2text")
-def speech2text():
+@webapp.route("/api/oldSpeech2Text")
+def oldSpeech2text():
 	connection = httplib.HTTPSConnection('api.parse.com', 443)
 	connection.connect()
 	connection.request('GET', '/1/classes/Feedbacks/vYGZor1rHD', '', {
@@ -83,7 +83,6 @@ def speech2text():
 	os.remove(uuid)
 	audio = wave.open(newPath2)
 	# os.remove(uuid)
-	audio = wave.open("track00.wav")
 	samples = audio.readframes(BUFFER_SIZE)
 	finished = False
 	houndClient.start(reviewListener())
@@ -95,8 +94,6 @@ def speech2text():
 			break
 	houndClient.finish()
 	os.remove(newPath2)
-	return(result)
-	os.remove("track00.wav")
 	return("Houndify Finished.")
 
 @webapp.route("/api/houndifyTest")
