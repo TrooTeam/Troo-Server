@@ -1,3 +1,8 @@
 ./idea/*
 *.o
 *.so
+*.m4a
+
+*.pyc
+
+*.wav
